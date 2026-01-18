@@ -23,5 +23,5 @@ A web-based school management system built using ASP.NET and SQL Server to autom
 5. Start the application
 
 ## 📸 Screenshots
-![Dashboard](screenshots/dashboard.png)
-![Fees](screenshots/fees.png)
+![Dashboard](screenshots/Dashboard.png)
+![Fees](screenshots/Login.png)
