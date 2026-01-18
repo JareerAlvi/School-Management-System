@@ -1,0 +1,213 @@
+﻿@model TeacherProfileViewModel
+
+<div class="max-w-3xl mx-auto p-6 bg-gray-50 min-h-screen">
+
+    <h2 class="text-3xl font-extrabold mb-6 text-gray-800">👩‍🏫 Teacher Profile</h2>
+ 
+    <a asp-action="ManageTeachers"
+       class="inline-block bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-6 rounded transition shadow-md">
+        ⬅️ Back to Teachers
+    </a>
+    @if (Model.HeadTeacherClasses.Any())
+    {
+        <section class="mt-10 bg-yellow-50 p-6 rounded-lg shadow-md border border-yellow-300">
+            <h3 class="text-2xl font-bold mb-4 text-yellow-800">🏆 Head Teacher</h3>
+
+            <div class="mb-4">
+                <p class="text-gray-700">
+                    <span class="font-semibold">Full Name:</span> @Model.FullName
+                </p>
+                <p class="text-gray-700">
+                    <span class="font-semibold">Qualification:</span> @Model.Qualification
+                </p>
+                <p class="text-gray-700">
+                    <span class="font-semibold">Contact:</span> @Model.ContactInfo
+                </p>
+                <p class="text-gray-700">
+                    <span class="font-semibold">Hire Date:</span> @Model.HireDate.ToShortDateString()
+                </p>
+            </div>
+
+            <div>
+                <h4 class="text-lg font-semibold text-gray-800 mb-2">📚 Head of Classes:</h4>
+                <ul class="list-disc pl-6 text-gray-700">
+                    @foreach (var className in Model.HeadTeacherClasses)
+                    {
+                        <li>@className</li>
+                    }
+                </ul>
+            </div>
+        </section>
+    }
+    else
+    {
+        <div class="bg-white p-6 rounded-lg shadow-md space-y-4">
+
+            <div class="grid grid-cols-2 gap-6">
+                <div class="flex flex-col justify-center">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-1">Full Name</h3>
+                    <p class="text-gray-900">@Model.FullName</p>
+                </div>
+                <div class="flex flex-col justify-center">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-1">Qualification</h3>
+                    <p class="text-gray-900">@Model.Qualification</p>
+                </div>
+                <div class="flex flex-col justify-center">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-1">Contact</h3>
+                    <p class="text-gray-900">@Model.ContactInfo</p>
+                </div>
+                <div class="flex flex-col justify-center">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-1">Hire Date</h3>
+                    <p class="text-gray-900">@Model.HireDate.ToShortDateString()</p>
+                </div>
+                <div class="flex flex-col justify-center">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-1">Salary</h3>
+                    <p class="text-green-600 font-semibold">@Model.Salary.ToString("C")</p>
+                </div>
+                <div class="flex items-center justify-content-between">
+                    @if (!Model.IsPaid)
+                    {
+                        <div class="ml-16">
+                            <form asp-action="MarkPayPending" method="post" class="w-full">
+                                <input type="hidden" name="teacherId" value="@Model.TeacherId" />
+
+                                <button class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-md transition shadow-md">💸 Mark as Paid</button>
+                            </form>
+                        </div>
+
+                    }
+                    else if (!Model.IsPaymentConfirmed)
+                    {
+                        <div class="ml-16">
+                            <a class="bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-semibold py-2 px-6  rounded-md transition shadow-md">⏳ Waiting for Confirmation</a>
+
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="ml-16">
+                            <a class="bg-gray-400 hover:bg-gray-500 text-gray-900 font-semibold py-2 px-6 rounded-md transition shadow-md">✅ Paid</a>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Payment History Button -->
+            <div class="flex mt-4 justify-between">
+                <a asp-action="PaymentHistory" asp-route-teacherId="@Model.TeacherId"
+                   class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-md transition shadow-md">
+                    📄 View Payment History
+                </a>
+                <a asp-controller="TeacherAttendance" asp-action="IndividualAttendance" asp-route-teacherId="@Model.TeacherId"
+                   class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-md mr-4 transition shadow-md">
+                    📋 View Attendance History
+                </a>
+            </div>
+
+        </div>
+
+    }
+  
+    <section class="mt-10">
+        <h3 class="text-2xl font-bold mb-4 text-gray-800">📚 Assigned Subjects</h3>
+        <div class="bg-white rounded-lg shadow-md p-5">
+
+            @if (Model.Subjects.Any())
+            {
+                <ul class="divide-y divide-gray-200">
+                    @foreach (var subject in Model.Subjects)
+                    {
+                        <li class="flex justify-between items-center py-3">
+                            <span class="font-medium text-gray-900">@subject.SubjectName (@subject.ClassName)</span>
+                            <form asp-action="RemoveSubject" method="post" class="inline">
+                                <input type="hidden" name="subjectId" value="@subject.Id" />
+
+                                <input type="hidden" name="teacherId" value="@Model.TeacherId" />
+                                <button type="submit" class="text-red-600 hover:text-red-800 font-semibold transition">🗑️ Remove</button>
+                            </form>
+                        </li>
+                    }
+                </ul>
+
+                <form asp-action="RemoveAllSubjects" method="post" class="mt-4 text-center">
+                    <input type="hidden" name="teacherId" value="@Model.TeacherId" />
+                    <button type="submit"
+                            class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition">
+                        🧹 Remove All Subjects
+                    </button>
+                </form>
+            }
+            else
+            {
+                <p class="text-gray-600 italic">No subjects assigned yet.</p>
+            }
+        </div>
+    </section>
+
+    <section class="mt-10">
+        <h3 class="text-2xl font-bold mb-4 text-gray-800">➕ Assign New Subject</h3>
+        <div class="bg-white p-6 rounded-lg shadow-md">
+
+            @if (Model.UnassignedSubjects.Any())
+            {
+                <form asp-action="AddSubject" method="post" class="flex flex-col md:flex-row gap-4 md:items-center">
+
+                    <select id="classDropdown" name="className" class="border rounded-md p-2 w-full md:w-1/3" required>
+                        <option value="">Select Class</option>
+                        @foreach (var classItem in Model.AllClasses)
+                        {
+                            <option value="@classItem.ClassName">@classItem.ClassName</option>
+                        }
+                    </select>
+
+                    <select id="subjectDropdown" name="subjectId" class="border rounded-md p-2 w-full md:w-1/3" required>
+                        <option value="">Select Subject</option>
+                        <!-- JS fills this -->
+                    </select>
+
+                    <input type="hidden" name="teacherId" value="@Model.TeacherId" />
+                    <div class="flex items-center space-x-4 pt-2">
+                        <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-md w-full md:w-auto transition">
+                            ➕ Add
+                        </button>
+                
+                    </div>
+                   
+                </form>
+
+                <script>
+                    const subjectsByClass = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+                                                                            Model.UnassignedSubjects
+                                                                            .GroupBy(s => s.ClassName)
+                                                                            .ToDictionary(g => g.Key, g => g.Select(s => new { s.SubjectId, s.SubjectName }).ToList())
+                                                            ));
+
+                const classDropdown = document.getElementById('classDropdown');
+                const subjectDropdown = document.getElementById('subjectDropdown');
+
+                    function clearSubjects() {
+                        subjectDropdown.innerHTML = '<option value="">Select Subject</option>';
+                    }
+
+                    classDropdown.addEventListener('change', () => {
+                        clearSubjects();
+                        const selectedClass = classDropdown.value;
+                        if (selectedClass && subjectsByClass[selectedClass]) {
+                            subjectsByClass[selectedClass].forEach(sub => {
+                                const option = document.createElement('option');
+                                option.value = sub.SubjectId;
+                                option.textContent = sub.SubjectName;
+                                subjectDropdown.appendChild(option);
+                            });
+                        }
+                    });
+                </script>
+                        }
+            else
+            {
+                <p class="text-gray-600 italic">All subjects are already assigned.</p>
+            }
+        </div>
+    </section>
+
+</div>

@@ -1,0 +1,137 @@
+﻿@model List<StudentCreateViewModel>
+
+@{
+    ViewData["Title"] = "Manage Students";
+    var classList = ViewBag.Classes as List<Class>;
+}
+
+<div class="p-6">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-indigo-700">Student Management</h2>
+        <a asp-controller="Student" asp-action="CreateStudent"
+           class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium">Add New Student</a>
+    </div>
+
+    <!-- Filters -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
+        <!-- Class Dropdown -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Filter by Class:</label>
+            <select id="classFilter"
+                    class="w-full sm:w-48 border border-gray-300 rounded-lg px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="all">All Classes</option>
+                @foreach (var classItem in classList)
+                {
+                    <option value="@classItem.ClassId">@classItem.ClassName</option>
+                }
+            </select>
+        </div>
+
+        <!-- Search Box -->
+        <div class="w-full sm:w-64">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Search Students:</label>
+            <div class="relative">
+                <input type="text" id="searchInput"
+                       class="w-full border border-gray-300 rounded-lg px-4 py-2 pl-10 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                       placeholder="Type to search..." />
+                <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" fill="none" stroke="currentColor"
+                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1110.5 3a7.5 7.5 0 016.15 13.65z" />
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden" id="studentTable">
+        <thead class="bg-indigo-600 text-white">
+            <tr>
+                <th class="text-left py-3 px-4">Full Name</th>
+                <th class="text-left py-3 px-4">DOB</th>
+                <th class="text-left py-3 px-4">Gender</th>
+                <th class="text-left py-3 px-4">Phone</th>
+                <th class="text-left py-3 px-4">Guardian</th>
+                <th class="text-left py-3 px-4">Admission</th>
+                <th class="text-left py-3 px-4">Class</th>
+                <th class="text-left py-3 px-4">Fee</th>
+                <th class="text-left py-3 px-4">Actions</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                var student = Model[i];
+                <tr class="student-row" data-class="@student.ClassId">
+                    <td class="py-2 px-4">@student.FullName</td>
+                    <td class="py-2 px-4">@student.DateOfBirth?.ToString("yyyy-MM-dd")</td>
+                    <td class="py-2 px-4">@student.Gender</td>
+                    <td class="py-2 px-4">@student.Phone</td>
+                    <td class="py-2 px-4">@student.GuardianName</td>
+                    <td class="py-2 px-4">@student.AdmissionDate?.ToString("yyyy-MM-dd")</td>
+                    <td class="py-2 px-4">@student.ClassName</td>
+                    <td class="py-2 px-4">@student.FeeAmount</td>
+                    <td class="py-2 px-4">
+                        <div class="flex space-x-2">
+                            <a asp-action="StudentProfile" asp-route-id="@student.StudentId" class="text-indigo-600 hover:underline">View</a>
+                            <a asp-action="EditStudent" asp-route-id="@student.StudentId" class="text-yellow-600 hover:underline">Edit</a>
+                            <a href="javascript:void(0);" onclick="confirmDelete('/Student/DeleteStudent/@student.StudentId')" class="text-red-600 hover:underline">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal -->
+<div id="deleteModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+        <h2 class="text-lg font-semibold text-red-600 mb-4">Are you sure?</h2>
+        <p class="text-gray-700 mb-6">This action cannot be undone. Do you want to delete this student?</p>
+        <div class="flex justify-end space-x-3">
+            <button id="cancelDelete" class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400">Cancel</button>
+            <form id="deleteForm" method="post">
+                <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Yes, Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const modal = document.getElementById('deleteModal');
+        const deleteForm = document.getElementById('deleteForm');
+        const cancelDelete = document.getElementById('cancelDelete');
+
+        function confirmDelete(url) {
+            deleteForm.action = url;
+            modal.classList.remove('hidden');
+        }
+
+        cancelDelete.addEventListener('click', () => {
+            modal.classList.add('hidden');
+        });
+
+        const classFilter = document.getElementById('classFilter');
+        const searchInput = document.getElementById('searchInput');
+
+        function filterStudents() {
+            const selectedClass = classFilter ? classFilter.value : "all";
+            const searchValue = searchInput.value.toLowerCase();
+
+            document.querySelectorAll('.student-row').forEach(row => {
+                const rowText = row.innerText.toLowerCase();
+                const rowClass = row.dataset.class;
+
+                const matchesClass = selectedClass === "all" || rowClass === selectedClass;
+                const matchesSearch = rowText.includes(searchValue);
+
+                row.style.display = (matchesClass && matchesSearch) ? "" : "none";
+            });
+        }
+
+        if (classFilter) classFilter.addEventListener('change', filterStudents);
+        searchInput.addEventListener('input', filterStudents);
+    </script>
+}

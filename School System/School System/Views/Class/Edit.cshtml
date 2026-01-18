@@ -1,0 +1,77 @@
+﻿@model School_System.Models.Class
+@{
+    ViewData["Title"] = "Edit Class";
+}
+
+<div class="max-w-lg mx-auto bg-white shadow-lg rounded-xl p-6">
+    <h2 class="text-2xl font-bold mb-4 text-purple-700">Edit Class</h2>
+
+    <form asp-action="Edit" method="post" class="space-y-4">
+        <input type="hidden" asp-for="ClassId" />
+
+        <div>
+            <label asp-for="ClassName" class="block font-semibold">Class Name</label>
+            <input asp-for="ClassName"
+                   class="w-full border rounded-lg p-2 focus:ring focus:ring-purple-300" />
+            <span asp-validation-for="ClassName" class="text-red-500 text-sm"></span>
+        </div>
+
+        <div>
+            <label asp-for="RoomNumber" class="block font-semibold">Room Number</label>
+            <input asp-for="RoomNumber"
+                   class="w-full border rounded-lg p-2 focus:ring focus:ring-purple-300" />
+            <span asp-validation-for="RoomNumber" class="text-red-500 text-sm"></span>
+        </div>
+
+        <div>
+            <label asp-for="MaxCapacity" class="block font-semibold">Max Capacity</label>
+            <input asp-for="MaxCapacity" type="number"
+                   class="w-full border rounded-lg p-2 focus:ring focus:ring-purple-300" />
+            <span asp-validation-for="MaxCapacity" class="text-red-500 text-sm"></span>
+        </div>
+
+        <div>
+            <label asp-for="HeadTeacherID" class="block font-semibold">Head Teacher</label>
+            <select asp-for="HeadTeacherID" asp-items="@(new SelectList(ViewBag.Teachers, "TeacherId", "FullName", Model.HeadTeacherID))"
+                    class="w-full border rounded-lg p-2 focus:ring focus:ring-purple-300"
+                    id="HeadTeacherID">
+                <option value="">-- Select Head Teacher --</option>
+            </select>
+            <span asp-validation-for="HeadTeacherID" class="text-red-500 text-sm"></span>
+            <input asp-for="TeacherName" type="hidden" />
+        </div>
+
+        <div class="flex justify-between">
+            <button type="submit"
+                    class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg shadow">
+                Update
+            </button>
+            <a asp-action="Index"
+               class="text-gray-600 hover:underline">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const headTeacherSelect = document.getElementById("HeadTeacherID");
+            const teacherNameInput = document.querySelector("input[name='TeacherName']");
+
+            function updateTeacherName() {
+                const selectedOption = headTeacherSelect.options[headTeacherSelect.selectedIndex];
+                teacherNameInput.value = selectedOption.text === "-- Select Head Teacher --" ? "" : selectedOption.text;
+            }
+
+            headTeacherSelect.addEventListener("change", updateTeacherName);
+
+            // Initialize on page load to sync with existing data
+            updateTeacherName();
+        });
+    </script>
+}

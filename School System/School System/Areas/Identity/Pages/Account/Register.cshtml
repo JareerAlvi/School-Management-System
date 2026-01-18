@@ -1,0 +1,53 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="min-h-screen flex items-center justify-center bg-gray-100">
+    <div class="bg-white p-10 rounded-lg shadow-lg w-full max-w-md">
+        <h2 class="text-3xl font-bold text-center mb-6 text-indigo-600">Create an Account</h2>
+
+        <form method="post" class="space-y-6">
+
+            <div>
+                <label asp-for="Input.Username" class="block text-sm font-medium text-indigo-700">Username</label>
+                <input asp-for="Input.Username" class="mt-1 block w-full px-4 py-2 border border-indigo-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+                <span asp-validation-for="Input.Username" class="text-sm text-indigo-600"></span>
+            </div>
+
+            <div>
+                <label asp-for="Input.Email" class="block text-sm font-medium text-indigo-700">Email</label>
+                <input asp-for="Input.Email" class="mt-1 block w-full px-4 py-2 border border-indigo-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+                <span asp-validation-for="Input.Email" class="text-sm text-indigo-600"></span>
+            </div>
+
+            <div>
+                <label asp-for="Input.Password" class="block text-sm font-medium text-indigo-700">Password</label>
+                <input asp-for="Input.Password" type="password" class="mt-1 block w-full px-4 py-2 border border-indigo-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+                <span asp-validation-for="Input.Password" class="text-sm text-indigo-600"></span>
+            </div>
+
+            <div>
+                <label asp-for="Input.ConfirmPassword" class="block text-sm font-medium text-indigo-700">Confirm Password</label>
+                <input asp-for="Input.ConfirmPassword" type="password" class="mt-1 block w-full px-4 py-2 border border-indigo-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+                <span asp-validation-for="Input.ConfirmPassword" class="text-sm text-indigo-600"></span>
+            </div>
+
+            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md shadow">
+                Register
+            </button>
+
+            <div asp-validation-summary="All" class="text-sm text-indigo-700 mt-2"></div>
+        </form>
+
+        <p class="mt-6 text-center text-sm text-indigo-700">
+            Already have an account?
+            <a asp-page="./Login" class="hover:text-indigo-900 font-medium">Sign in here</a>
+        </p>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

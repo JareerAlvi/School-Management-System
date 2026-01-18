@@ -1,0 +1,74 @@
+﻿@model TeacherCreateViewModel
+
+@{
+    ViewData["Title"] = "Add New Teacher";
+}
+
+<div class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow">
+    <h2 class="text-2xl font-bold mb-4 text-indigo-700">Add New Teacher</h2>
+
+    <form asp-action="CreateTeacher" method="post" class="space-y-4">
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="text-red-600 text-sm mb-2">
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <div>@error.ErrorMessage</div>
+                }
+            </div>
+        }
+
+        <div>
+            <label asp-for="Email"></label>
+            <input asp-for="Email" type="email" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2" />
+            <span asp-validation-for="Email" class="text-red-600 text-sm"></span>
+        </div>
+
+        <div>
+            <label asp-for="Password"></label>
+            <input asp-for="Password" type="password" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2" />
+            <span asp-validation-for="Password" class="text-red-600 text-sm"></span>
+        </div>
+
+        <div>
+            <label asp-for="FullName"></label>
+            <input asp-for="FullName" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2" />
+            <span asp-validation-for="FullName" class="text-red-600 text-sm"></span>
+        </div>
+
+        <div>
+            <label asp-for="Qualification"></label>
+            <input asp-for="Qualification" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2" />
+            <span asp-validation-for="Qualification" class="text-red-600 text-sm"></span>
+        </div>
+
+        <div>
+            <label asp-for="ContactInfo"></label>
+            <input asp-for="ContactInfo" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2" />
+            <span asp-validation-for="ContactInfo" class="text-red-600 text-sm"></span>
+        </div>
+
+        <div>
+            <label asp-for="HireDate"></label>
+            <input asp-for="HireDate" type="date" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2" />
+            <span asp-validation-for="HireDate" class="text-red-600 text-sm"></span>
+        </div>
+
+        <div>
+            <label asp-for="Salary"></label>
+            <input asp-for="Salary" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2" />
+            <span asp-validation-for="Salary" class="text-red-600 text-sm"></span>
+        </div>
+        
+        <div class="flex items-center space-x-4 pt-2">
+        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md">Create</button>
+            <a asp-action="ManageTeachers" class="text-gray-600 hover:text-indigo-700 font-medium">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,92 @@
+﻿@model TeacherAttendanceMarkViewModel
+@{
+    ViewBag.Title = "Mark Attendance";
+    var today = DateTime.Today;
+}
+
+<div class="max-w-6xl mx-auto px-4 py-6">
+    <h2 class="text-3xl font-semibold text-gray-800 mb-6">
+        ✅ Mark Attendance – @today.ToString("dddd, dd MMMM yyyy")
+    </h2>
+
+    <form asp-action="Mark" method="post">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            @foreach (var teacher in Model.Teachers)
+            {
+                var attendance = Model.TodayAttendance
+                .FirstOrDefault(a => a.TeacherId == teacher.TeacherId);
+
+                <div class="bg-white rounded-lg shadow-md p-4 border border-gray-200">
+                    <h3 class="text-lg font-medium text-gray-800">@teacher.FullName</h3>
+                    <div class="mt-3 space-x-4">
+                        <label class="inline-flex items-center">
+                            <input type="radio"
+                                   name="attendance_@teacher.TeacherId"
+                                   value="true"
+                                   class="text-green-600"
+                                   @(attendance?.IsMarked == true ? "disabled" : "")
+                                   @(attendance?.IsPresent == true ? "checked" : "") />
+                            <span class="ml-2 text-gray-700">Present</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio"
+                                   name="attendance_@teacher.TeacherId"
+                                   value="false"
+                                   class="text-red-600"
+                                   @(attendance?.IsMarked == true ? "disabled" : "")
+                                   @(attendance?.IsPresent == false ? "checked" : "") />
+                            <span class="ml-2 text-gray-700">Absent</span>
+                        </label>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @* Show submit button only if any attendance is unmarked *@
+        @if (Model.TodayAttendance.Any(a => a.IsMarked == false))
+        {
+            <div class="mt-8 flex justify-end">
+                <button type="submit"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow transition duration-200">
+                    📩 Submit Attendance
+                </button>
+            </div>
+        }
+    </form>
+
+    <div class="mt-12">
+        <h3 class="text-xl font-semibold mb-4 text-gray-800">📊 Today's Attendance Summary</h3>
+        <table class="min-w-full bg-white border rounded-lg overflow-hidden shadow">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="text-left px-4 py-3 border-b">Teacher</th>
+                    <th class="text-left px-4 py-3 border-b">Status</th>
+                    <th class="text-left px-4 py-3 border-b">Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var record in Model.TodayAttendance)
+                {
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="px-4 py-3">@record.Teacher.FullName</td>
+                        <td class="px-4 py-3">
+                            @if (!record.IsMarked)
+                            {
+                                <span class="inline-block bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full font-semibold">Unmarked</span>
+                            }
+                            else if (record.IsPresent == true)
+                            {
+                                <span class="inline-block bg-green-100 text-green-700 px-3 py-1 rounded-full font-semibold">Present</span>
+                            }
+                            else
+                            {
+                                <span class="inline-block bg-red-100 text-red-700 px-3 py-1 rounded-full font-semibold">Absent</span>
+                            }
+                        </td>
+                        <td class="px-4 py-3 text-gray-600">@record.Remarks </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

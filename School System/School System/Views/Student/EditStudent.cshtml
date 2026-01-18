@@ -1,0 +1,122 @@
+﻿@model StudentCreateViewModel
+
+@{
+    ViewData["Title"] = "Edit Student";
+}
+
+<div class="max-w-2xl mx-auto p-6 bg-white rounded shadow mt-6">
+    <h2 class="text-2xl font-bold mb-4 text-gray-800">Edit Student</h2>
+    <!-- Display all ModelState errors -->
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+            <ul class="list-disc pl-5 space-y-1">
+                @foreach (var state in ViewData.ModelState.Values)
+                {
+                    @foreach (var error in state.Errors)
+                    {
+                        <li>@error.ErrorMessage</li>
+                    }
+                }
+            </ul>
+        </div>
+    }
+
+    <form asp-action="EditStudent" method="post" class="space-y-4">
+        <div asp-validation-summary="ModelOnly" class="text-red-500 text-sm"></div>
+        <input type="hidden" asp-for="StudentId" />
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label asp-for="FullName"></label>
+                <input asp-for="FullName" class="border rounded w-full p-2" />
+                <span asp-validation-for="FullName" class="text-red-500 text-sm"></span>
+            </div>
+
+            <div>
+                <label asp-for="DateOfBirth"></label>
+                <input asp-for="DateOfBirth" type="date" class="border rounded w-full p-2" />
+                <span asp-validation-for="DateOfBirth" class="text-red-500 text-sm"></span>
+            </div>
+
+            <div>
+                <label asp-for="Gender"></label>
+                <select asp-for="Gender" class="border rounded w-full p-2">
+                    <option value="">Select</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Other</option>
+                </select>
+                <span asp-validation-for="Gender" class="text-red-500 text-sm"></span>
+            </div>
+
+            <div>
+                <label asp-for="Phone"></label>
+                <input asp-for="Phone" class="border rounded w-full p-2" />
+                <span asp-validation-for="Phone" class="text-red-500 text-sm"></span>
+            </div>
+
+            <div>
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="border rounded w-full p-2" />
+                <span asp-validation-for="Email" class="text-red-500 text-sm"></span>
+            </div>
+
+            <div>
+                <label asp-for="GuardianName"></label>
+                <input asp-for="GuardianName" class="border rounded w-full p-2" />
+                <span asp-validation-for="GuardianName" class="text-red-500 text-sm"></span>
+            </div>
+
+            <div class="md:col-span-2">
+                <label asp-for="Address" class="block font-medium text-gray-700">Address</label>
+                <input asp-for="Address" class="border rounded w-full p-2" />
+                <span asp-validation-for="Address" class="text-red-500 text-sm"></span>
+            </div>
+
+
+            <div>
+                <label asp-for="AdmissionDate"></label>
+                <input asp-for="AdmissionDate" type="date" class="border rounded w-full p-2" />
+                <span asp-validation-for="AdmissionDate" class="text-red-500 text-sm"></span>
+            </div>
+
+            <div>
+                <label asp-for="ClassId"></label>
+                <select asp-for="ClassId" class="border rounded w-full p-2">
+                    <option value="">Select Class</option>
+                    @foreach (var cls in ViewBag.Classes as List<Class>)
+                    {
+                        <option value="@cls.ClassId">@cls.ClassName</option>
+                    
+                    }
+                </select>
+
+                <span asp-validation-for="ClassId" class="text-red-500 text-sm"></span>
+            </div>
+
+            <div>
+                <label asp-for="FeeAmount"></label>
+                <input asp-for="FeeAmount" type="number" class="border rounded w-full p-2" />
+                <span asp-validation-for="FeeAmount" class="text-red-500 text-sm"></span>
+            </div>
+
+            <div>
+                <label asp-for="FeeDueDate"></label>
+                <input asp-for="FeeDueDate" type="date" class="border rounded w-full p-2" />
+                <span asp-validation-for="FeeDueDate" class="text-red-500 text-sm"></span>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-4 pt-2">
+            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
+                💾 Save Student
+            </button>
+            <a asp-action="ManageStudents" class="text-gray-600 hover:text-indigo-700 font-medium">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

@@ -1,0 +1,190 @@
+﻿@model GenerateMonthlyFeesViewModel
+@{
+    ViewData["Title"] = "Student Fees";
+    bool enabled = (bool)(ViewBag.EnableGenerateButton ?? false);
+    bool feeAlreadyGenerated = (bool)(ViewBag.Check ?? false);
+    var students = ViewBag.Students as List<School_System.Models.Student>;
+    int? selectedStudentId = ViewBag.SelectedStudentId as int?;
+    int? selectedMonth = ViewBag.SelectedMonth as int?;
+    string selectedStatus = ViewBag.SelectedStatus as string;
+}
+
+<div class="max-w-6xl mx-auto mt-10 bg-white shadow-lg rounded-2xl p-6">
+    <h2 class="text-2xl font-bold text-gray-800 mb-4">💰 Generate Monthly Fees</h2>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg mb-4 border border-blue-200">
+            @TempData["Message"]
+        </div>
+    }
+
+    <form asp-action="GenerateMonthlyFeesPost" method="post" class="space-y-4" id="generateForm">
+        <button id="generateBtn"
+                type="submit"
+                class="px-6 py-3 rounded-lg text-white font-semibold shadow-md transition
+                   @(enabled ? "bg-green-600 hover:bg-green-700" : "bg-gray-400 cursor-not-allowed")"
+                @(enabled ? "" : "disabled")>
+            🚀 Generate Monthly Fees
+        </button>
+    </form>
+
+    <script>
+        document.getElementById("generateForm").addEventListener("submit", function () {
+            const btn = document.getElementById("generateBtn");
+            btn.disabled = true;
+            btn.classList.remove("bg-green-600", "hover:bg-green-700");
+            btn.classList.add("bg-gray-400", "cursor-not-allowed");
+            btn.innerText = "Processing...";
+        });
+    </script>
+
+    <div class="mt-4 text-gray-600">
+        @if (!enabled)
+        {
+            <p>⚠️ Monthly fees have already been generated for this month</p>
+        }
+        else
+        {
+            <p>Click the button above to generate fees for all students for this month.</p>
+        }
+    </div>
+    <form method="get" class="mb-6 flex flex-wrap gap-6 items-end">
+
+        <div class="flex flex-col">
+            <label for="studentName" class="text-sm font-medium text-gray-700 mb-1">Student Name</label>
+            <select id="studentName" name="studentName"
+                    class="block w-48 rounded border border-gray-300 bg-white px-3 py-2
+                       text-gray-700 focus:border-blue-500 focus:ring focus:ring-blue-300
+                       focus:outline-none transition">
+                <option value="">-- All --</option>
+                @foreach (var name in Model.AvailableStudentNames)
+                {
+                    if (name == Model.FilterStudentName)
+                    {
+                        <option value="@name" selected>@name</option>
+                    }
+                    else
+                    {
+                        <option value="@name">@name</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="flex flex-col">
+            <label for="dueMonth" class="text-sm font-medium text-gray-700 mb-1">Due Month</label>
+            <select id="dueMonth" name="dueMonth"
+                    class="block w-36 rounded border border-gray-300 bg-white px-3 py-2
+                       text-gray-700 focus:border-blue-500 focus:ring focus:ring-blue-300
+                       focus:outline-none transition">
+                <option value="">-- All --</option>
+                @foreach (var monthNum in Model.AvailableMonths)
+                {
+                    var monthName = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(monthNum);
+                    if (Model.FilterDueMonth == monthNum)
+                    {
+                        <option value="@monthNum" selected>@monthName</option>
+                    }
+                    else
+                    {
+                        <option value="@monthNum">@monthName</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="flex flex-col">
+            <label for="paymentStatus" class="text-sm font-medium text-gray-700 mb-1">Payment Status</label>
+            <select id="paymentStatus" name="paymentStatus"
+                    class="block w-36 rounded border border-gray-300 bg-white px-3 py-2
+                       text-gray-700 focus:border-blue-500 focus:ring focus:ring-blue-300
+                       focus:outline-none transition">
+                <option value="">-- All --</option>
+                @foreach (var status in Model.AvailablePaymentStatuses)
+                {
+                    if (status == Model.FilterPaymentStatus)
+                    {
+                        <option value="@status" selected>@status</option>
+                    }
+                    else
+                    {
+                        <option value="@status">@status</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <button type="submit"
+                class="h-10 px-6 bg-indigo-600 text-white rounded-md hover:bg-indigo-700
+                   focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1
+                   transition">
+            Filter
+        </button>
+    </form>
+    <h3 class="mt-8 mb-4 text-xl font-semibold text-gray-700">All Student Fees Records</h3>
+
+    @if (Model.Fees != null && Model.Fees.Any())
+    {
+        <table class="w-full text-left text-gray-700 border border-gray-200 rounded overflow-hidden">
+            <thead class="bg-gray-100 text-gray-800">
+                <tr>
+                    <th class="px-4 py-2 border">#</th>
+                    <th class="px-4 py-2 border">Student Name</th>
+                    <th class="px-4 py-2 border">Amount</th>
+                    <th class="px-4 py-2 border">Due Date</th>
+                    <th class="px-4 py-2 border">Paid Date</th>
+                    <th class="px-4 py-2 border">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Fees.Count; i++)
+                {
+                    var fee = Model.Fees[i];
+                    <tr class="hover:bg-gray-50">
+
+                        <td class="px-4 py-2 border">@((i + 1))</td>
+                        <td asp-action="StudentProfile" asp-route-id="@fee.Student?.StudentId" class="cursor-pointer hover:bg-gray-100">
+                            @fee.Student?.FullName</td>
+                        <td class="px-4 py-2 border">@fee.FeeAmount</td>
+                        <td class="px-4 py-2 border">@fee.DueDate?.ToString("yyyy-MM-dd")</td>
+                        <td class="px-4 py-2 border">
+                            @if (fee.PaymentDate.HasValue)
+                            {
+                                @fee.PaymentDate.Value.ToDateTime(new TimeOnly()).ToString("MM/dd/yyyy")
+                            }
+                            else
+                            {
+                                <span>Pending</span>
+                            }
+                        </td>
+                        <td class="px-4 py-2 border font-semibold text-center">
+                            @if (fee.PaymentStatus == "Unpaid" || fee.PaymentStatus == "Pending")
+                            {
+                                <div class="inline-flex items-center space-x-2 justify-center">
+                                    <span class="text-red-700">@fee.PaymentStatus</span>
+                                    <form asp-action="ReceiveFeeBulk" method="post" class="inline">
+                                        <input type="hidden" name="feeId" value="@fee.FeeId" />
+                                        <button type="submit"
+                                                class="ml-2 bg-green-600 hover:bg-green-700 text-white font-semibold py-1 px-4 rounded transition">
+                                            Mark as Paid
+                                        </button>
+                                    </form>
+                                </div>
+                            }
+                            else
+                            {
+                                <span class="text-green-700">@fee.PaymentStatus</span>
+                            }
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="text-gray-600">No fee records found.</p>
+    }
+</div>

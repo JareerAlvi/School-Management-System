@@ -1,0 +1,72 @@
+﻿@model IEnumerable<School_System.Models.Subject>
+
+@{
+    ViewData["Title"] = "Manage Subjects";
+}
+
+<div class="max-w-5xl mx-auto">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-3xl font-bold text-gray-800">Subjects List</h2>
+        <div class="space-x-3">
+            <a asp-action="CreateSubject" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow">
+                + Add New Subject
+            </a>
+        </div>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-gray-300 rounded-lg overflow-hidden">
+            <thead>
+                <tr class="bg-gray-100 text-left">
+                    <th class="border p-3">ID</th>
+                    <th class="border p-3">Subject Name</th>
+                    <th class="border p-3">Class</th>
+                    <th class="border p-3">Assigned?</th>
+                    <th class="border p-3">Assigned To</th>
+                    <th class="border p-3">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var subject in Model)
+                {
+                    <tr class="hover:bg-gray-50">
+                        <td class="border p-3">@subject.SubjectId</td>
+                        <td class="border p-3">@subject.SubjectName</td>
+                        <td class="border p-3">@subject.Class.ClassName</td>
+                        <td class="border p-3">
+                            @if (subject.IsAssigned)
+                            {
+                                <span class="text-green-600 font-semibold">Yes</span>
+                            }
+                            else
+                            {
+                                <span class="text-red-600 font-semibold">No</span>
+                            }
+                        </td>
+                        <td class="border p-3">
+                            @if (subject.TeacherAssignedSubjects.Any())
+                            {
+                                @foreach (var tas in subject.TeacherAssignedSubjects)
+                                {
+                                    <div>@tas.Teacher.FullName</div>
+                                }
+                            }
+                            else
+                            {
+                                <span class="text-gray-500 italic">None</span>
+                            }
+                        </td>
+                        <td class="border p-3">
+                            <button onclick="confirmDelete(@subject.SubjectId)"
+                                    class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg shadow">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Your delete modal & scripts remain unchanged -->

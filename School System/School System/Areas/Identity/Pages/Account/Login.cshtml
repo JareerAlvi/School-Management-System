@@ -1,0 +1,50 @@
+﻿@page
+@model LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="min-h-screen flex items-center justify-center bg-gray-100">
+    <div class="bg-white p-10 rounded-lg shadow-lg w-full max-w-md">
+        <h2 class="text-3xl font-bold text-center mb-6 text-indigo-600">School Portal</h2>
+
+        <form method="post" class="space-y-6">
+
+            <div>
+                <label asp-for="Input.Email" class="block text-sm font-medium text-indigo-700">Email</label>
+                <input asp-for="Input.Email" class="mt-1 block w-full px-4 py-2 border border-indigo-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+                <span asp-validation-for="Input.Email" class="text-sm text-indigo-600"></span>
+            </div>
+
+            <div>
+                <label asp-for="Input.Password" class="block text-sm font-medium text-indigo-700">Password</label>
+                <input asp-for="Input.Password" type="password" class="mt-1 block w-full px-4 py-2 border border-indigo-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+                <span asp-validation-for="Input.Password" class="text-sm text-indigo-600"></span>
+            </div>
+
+            <div class="flex items-center">
+                <input asp-for="Input.RememberMe" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-indigo-300 rounded" />
+                <label asp-for="Input.RememberMe" class="ml-2 block text-sm text-indigo-900">Remember me</label>
+            </div>
+
+            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md shadow">
+                Sign In
+            </button>
+
+            <div asp-validation-summary="All" class="text-sm text-indigo-700 mt-2"></div>
+        </form>
+
+        <p class="mt-4 text-center text-sm text-indigo-700">
+            <a asp-page="./ForgotPassword" class="hover:text-indigo-900 font-medium">Forgot your password?</a>
+        </p>
+
+        <p class="mt-6 text-center text-sm text-indigo-700">
+            Don’t have an account?
+            <a asp-page="./Register" class="hover:text-indigo-900 font-medium">Register here</a>
+        </p>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

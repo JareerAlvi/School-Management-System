@@ -1,0 +1,118 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="text-2xl font-bold mb-6 text-gray-800">Admin Dashboard</h2>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Manage Students -->
+    <a href="@Url.Action("ManageStudents", "Student")" class="bg-blue-100 p-6 rounded-2xl shadow hover:shadow-xl transition duration-300 transform hover:-translate-y-1">
+        <div class="flex items-center justify-between mb-2">
+            <h3 class="text-xl font-semibold text-blue-700">Manage Students</h3>
+            <svg class="w-6 h-6 text-blue-700" fill="none" stroke="currentColor" stroke-width="2"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+        </div>
+        <p class="text-gray-600">View, add, update or remove student records.</p>
+    </a>
+
+    <!-- Manage Teachers -->
+    <a href="@Url.Action("ManageTeachers", "Admin")" class="bg-green-100 p-6 rounded-2xl shadow hover:shadow-xl transition duration-300 transform hover:-translate-y-1">
+        <div class="flex items-center justify-between mb-2">
+            <h3 class="text-xl font-semibold text-green-700">Manage Teachers</h3>
+            <svg class="w-6 h-6 text-green-700" fill="none" stroke="currentColor" stroke-width="2"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+        </div>
+        <p class="text-gray-600">Manage teacher details, assignments and profiles.</p>
+    </a>
+
+    <!-- Analytics -->
+    <a href="@Url.Action("Analytics", "Admin")" class="bg-yellow-100 p-6 rounded-2xl shadow hover:shadow-xl transition duration-300 transform hover:-translate-y-1">
+        <div class="flex items-center justify-between mb-2">
+            <h3 class="text-xl font-semibold text-yellow-700">Analytics</h3>
+            <svg class="w-6 h-6 text-yellow-700" fill="none" stroke="currentColor" stroke-width="2"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11 3v18m-4-4h8" />
+            </svg>
+        </div>
+        <p class="text-gray-600">Visual reports on student, teacher & attendance data.</p>
+    </a>
+
+    <!-- Certificates -->
+    <a href="@Url.Action("Index", "Certificate")" class="bg-purple-100 p-6 rounded-2xl shadow hover:shadow-xl transition duration-300 transform hover:-translate-y-1">
+        <div class="flex items-center justify-between mb-2">
+            <h3 class="text-xl font-semibold text-purple-700">Certificates</h3>
+            <svg class="w-6 h-6 text-purple-700" fill="none" stroke="currentColor" stroke-width="2"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M12 8v4l3 3m6-5a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+        </div>
+        <p class="text-gray-600">Issue and manage student certificates and awards.</p>
+    </a>
+
+    <!-- Export Reports -->
+    <a href="@Url.Action("Export", "Reports")" class="bg-red-100 p-6 rounded-2xl shadow hover:shadow-xl transition duration-300 transform hover:-translate-y-1">
+        <div class="flex items-center justify-between mb-2">
+            <h3 class="text-xl font-semibold text-red-700">Export Reports</h3>
+            <svg class="w-6 h-6 text-red-700" fill="none" stroke="currentColor" stroke-width="2"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M12 4v16m8-8H4" />
+            </svg>
+        </div>
+        <p class="text-gray-600">Download attendance, performance and fee reports.</p>
+    </a>
+    <a href="@Url.Action("Index", "TeacherAttendance")" class="bg-indigo-100 p-6 rounded-2xl shadow hover:shadow-xl transition duration-300 transform hover:-translate-y-1">
+        <div class="flex items-center justify-between mb-2">
+            <h3 class="text-xl font-semibold text-indigo-700">Teacher Attendance</h3>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 w-6 h-6 text-indigo-700">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 2.994v2.25m10.5-2.25v2.25m-14.252 13.5V7.491a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v11.251m-18 0a2.25 2.25 0 0 0 2.25 2.25h13.5a2.25 2.25 0 0 0 2.25-2.25m-18 0v-7.5a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5m-6.75-6h2.25m-9 2.25h4.5m.002-2.25h.005v.006H12v-.006Zm-.001 4.5h.006v.006h-.006v-.005Zm-2.25.001h.005v.006H9.75v-.006Zm-2.25 0h.005v.005h-.006v-.005Zm6.75-2.247h.005v.005h-.005v-.005Zm0 2.247h.006v.006h-.006v-.006Zm2.25-2.248h.006V15H16.5v-.005Z" />
+            </svg>
+
+        </div>
+        <p class="text-gray-600">View or mark teacher attendance.</p>
+    </a>
+    <!-- Manage Subjects -->
+    <!-- Manage Subjects -->
+    <a href="@Url.Action("ManageSubjects", "Admin")" class="bg-pink-100 p-6 rounded-2xl shadow hover:shadow-xl transition duration-300 transform hover:-translate-y-1">
+        <div class="flex items-center justify-between mb-2">
+            <h3 class="text-xl font-semibold text-pink-700">Manage Subjects</h3>
+            <svg class="w-6 h-6 text-pink-700" fill="none" stroke="currentColor" stroke-width="2"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M9 5l7 7-7 7" />
+            </svg>
+        </div>
+        <p class="text-gray-600">View, add, or update subjects for each class.</p>
+    </a>
+    <!-- Classes -->
+<a href="@Url.Action("Index", "Class")" class="bg-gray-200 p-6 rounded-2xl shadow hover:shadow-xl transition duration-300 transform hover:-translate-y-1">
+    <div class="flex items-center justify-between mb-2">
+        <h3 class="text-xl font-semibold text-orange-700">Manage Classes</h3>
+        <svg class="w-6 h-6 text-orange-700" fill="none" stroke="currentColor" stroke-width="2"
+             viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+    </div>
+    <p class="text-gray-600">Create or update class information.</p>
+</a>
+    <!-- Student Fees -->
+    <!-- Student Fees -->
+    <a href="@Url.Action("GenerateMonthlyFees", "Student")" class="bg-pink-300 p-6 rounded-2xl shadow hover:shadow-xl transition duration-300 transform hover:-translate-y-1">
+        <div class="flex items-center justify-between mb-2">
+            <h3 class="text-xl font-semibold text-pink-700">Student Fees</h3>
+            <svg class="w-6 h-6 text-pink-700" fill="none" stroke="currentColor" stroke-width="2"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M12 8c-1.104 0-2 .672-2 1.5S10.896 11 12 11s2 .672 2 1.5S13.104 14 12 14m0-6v6m0 0v2m0-2h4m-4 0H8" />
+            </svg>
+        </div>
+        <p class="text-gray-600">Manage student fee payments, dues, and receipts.</p>
+    </a>
+
+</div>
